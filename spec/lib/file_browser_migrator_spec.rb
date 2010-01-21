@@ -11,7 +11,7 @@ describe FileBrowserMigrator do
         <img src="../../../assets/LolCat.gif" alt="Lol!" />
         <p>Some junk, <a><b>Malformed</a></b> HTML...
       )
-      @part = PagePart.new(:content => @content)
+      @part = PagePart.new(:content => @content.dup)
     end
 
     it "should not alter image tags for which it can't find an asset" do
@@ -55,19 +55,25 @@ describe FileBrowserMigrator do
   end
 
   describe "running" do
-    before do
-      FileBrowserMigrator.stub! :fix
-    end
-
-    after do
-      FileBrowserMigrator.run
-    end
-
     [PagePart, Snippet, Layout].each do |content_class|
-      it "should fix and save #{content_class.name.humanize.downcase.pluralize}" do
-        content_class.stub!(:find_each).and_yield @content = mock_model(content_class, :save! => true)
-        FileBrowserMigrator.should_receive(:fix).with @content
-        @content.should_receive :save!
+      describe "on #{content_class.name.humanize.downcase.pluralize}" do
+        before do
+          FileBrowserMigrator.stub! :fix
+          @content = mock_model(content_class, :save! => true, :content_will_change! => nil)
+          content_class.stub!(:find_each).and_yield @content
+        end
+
+        after do
+          FileBrowserMigrator.run
+        end
+
+        it "should fix them" do
+          FileBrowserMigrator.should_receive(:fix).with @content
+        end
+
+        it "should be saved" do
+          @content.should_receive :save!
+        end
       end
     end
   end

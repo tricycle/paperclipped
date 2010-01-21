@@ -43,12 +43,12 @@ describe FileBrowserMigrator do
       FileBrowserMigrator.fix @part
     end
 
-    it "should transform img w. src tags to r:assets:image w. title tags" do
+    it "should transform img w. src tags to r:assets:image w. id tags" do
       FileBrowserMigrator.fix @part
       @part.content.should == %(
         <p>All models are wrong, some are useful.</p>
-        <r:assets:image title="MyAsset" />
-        <r:assets:image title="MyAsset" />
+        <r:assets:image id="#{@asset.id}" />
+        <r:assets:image id="#{@asset.id}" />
         <p>Some junk, <a><b>Malformed</a></b> HTML...
       )
     end

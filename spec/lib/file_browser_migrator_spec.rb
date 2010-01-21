@@ -8,7 +8,8 @@ describe FileBrowserMigrator do
       @content = %(
         <p>All models are wrong, some are useful.</p>
         <img src="../../../assets/Correlation.jpeg" />
-        <img src="../../../assets/LolCat.gif" alt="Lol!" />
+        <img src="../assets/LolCat.gif" alt="Lol!" />
+        <img src="/assets/Some%20Thing.jpeg" />
         <p>Some junk, <a><b>Malformed</a></b> HTML...
       )
       @part = PagePart.new(:content => @content.dup)
@@ -31,6 +32,11 @@ describe FileBrowserMigrator do
       FileBrowserMigrator.fix @part
     end
 
+    it "should escape URIs when searching for the asset filename" do
+      Asset.should_receive(:find_by_asset_file_name).with "Some Thing.jpeg"
+      FileBrowserMigrator.fix @part
+    end
+
     it "should not update the asset caption when one exists" do
       @asset.stub!(:caption).and_return "Something"
       @asset.should_not_receive :update_attributes
@@ -43,12 +49,13 @@ describe FileBrowserMigrator do
       FileBrowserMigrator.fix @part
     end
 
-    it "should transform img w. src tags to r:assets:image w. id tags" do
+    it "should transform img w. src tags to r:assets:image w. title tags" do
       FileBrowserMigrator.fix @part
       @part.content.should == %(
         <p>All models are wrong, some are useful.</p>
-        <r:assets:image id="#{@asset.id}" />
-        <r:assets:image id="#{@asset.id}" />
+        <r:assets:image title="#{@asset.title}" />
+        <r:assets:image title="#{@asset.title}" />
+        <r:assets:image title="#{@asset.title}" />
         <p>Some junk, <a><b>Malformed</a></b> HTML...
       )
     end

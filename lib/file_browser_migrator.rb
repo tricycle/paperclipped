@@ -19,7 +19,8 @@ class FileBrowserMigrator
         # Change the tag to an r:assets:image one.
         tag.name = 'r:assets:image'
         src = tag.remove_attribute 'src'
-        asset = src && Asset.find_by_asset_file_name(src.value.split('/').last)
+        file_name = URI.decode(src.value.split('/').last)
+        asset = src && Asset.find_by_asset_file_name(file_name)
 
         if asset
           # Use alt from img tag for asset caption if missing.
@@ -27,7 +28,7 @@ class FileBrowserMigrator
           asset.update_attributes(:caption => alt.value) if asset.caption.blank? && alt
 
           # Set Radiant's reference to the asset.
-          tag.set_attribute('id', asset.id.to_s)
+          tag.set_attribute('title', asset.title)
 
           tag.to_html.gsub("></r:assets:image>", " />") # As HTML, converted to self-closing tag.
         else

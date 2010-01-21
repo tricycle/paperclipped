@@ -63,19 +63,12 @@ describe FileBrowserMigrator do
       FileBrowserMigrator.run
     end
 
-    it "should fix page parts" do
-      PagePart.stub!(:find_each).and_yield @part = mock_model(PagePart)
-      FileBrowserMigrator.should_receive(:fix).with @part
-    end
-
-    it "should fix snippets" do
-      Snippet.stub!(:find_each).and_yield @snippet = mock_model(Snippet)
-      FileBrowserMigrator.should_receive(:fix).with @snippet
-    end
-
-    it "should fix layouts" do
-      Layout.stub!(:find_each).and_yield @layout = mock_model(Layout)
-      FileBrowserMigrator.should_receive(:fix).with @layout
+    [PagePart, Snippet, Layout].each do |content_class|
+      it "should fix and save #{content_class.name.humanize.downcase.pluralize}" do
+        content_class.stub!(:find_each).and_yield @content = mock_model(content_class, :save! => true)
+        FileBrowserMigrator.should_receive(:fix).with @content
+        @content.should_receive :save!
+      end
     end
   end
 end

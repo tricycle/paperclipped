@@ -4,12 +4,15 @@ class FileBrowserMigrator
   class << self
     def run
       [PagePart, Snippet, Layout].each do |klass|
-        klass.find_each { |content| fix content }
+        klass.find_each do |content|
+          fix content
+          content.save!
+        end
       end
     end
 
-    def fix(part)
-      part.content.gsub!(/<img.*?src=\".*?\/assets\/.*?\".*?>/) do |img_tag|
+    def fix(content)
+      content.content.gsub!(/<img.*?src=\".*?\/assets\/.*?\".*?>/) do |img_tag|
         tag = Nokogiri.parse(img_tag).children.first # First element of the document containing only this tag.
         tag.name = 'r:assets:image'
         src = tag.remove_attribute 'src'

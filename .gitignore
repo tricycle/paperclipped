@@ -1,4 +1,5 @@
 .DS_Store
+*.swp
 
 # ignore log files
 log/*.log

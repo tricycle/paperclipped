@@ -92,6 +92,11 @@ If you would like to use this mode type \"yes\", type \"no\" or just hit enter t
         PaperclippedExtension.migrator.new(:up, PaperclippedExtension.migrations_path).send(:assume_migrated_upto_version, 3)
         PaperclippedExtension.migrator.migrate
       end
+
+      desc "Migrates from the file browser extension."
+      task :migrate_from_file_browser => :environment do
+        FileBrowserMigrator.run
+      end
     end
   end
 end

@@ -267,7 +267,7 @@ module Paperclip
           unless valid_types.blank?
             content_type = attachment.instance_read(:content_type)
             unless valid_types.any?{|t| content_type.nil? || t === content_type }
-              options[:message] || "is not one of the allowed file types."
+              options[:message] || "is not one of the allowed file types (it's a #{content_type})."
             end
           end
         end

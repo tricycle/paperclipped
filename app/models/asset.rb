@@ -199,7 +199,7 @@ class Asset < ActiveRecord::Base
   register_type :video, %w[video/mpeg video/mp4 video/ogg video/quicktime video/x-ms-wmv video/x-flv]
   register_type :audio, %w[audio/mpeg audio/mpg audio/ogg application/ogg audio/x-ms-wma audio/vnd.rn-realaudio audio/x-wav]
   register_type :swf, %w[application/x-shockwave-flash]
-  register_type :pdf, %w[application/pdf]
+  register_type :pdf, %w[application/pdf application/x-pdf]
  
   # alias for backwards-compatibility: movie can be video or swf
   register_type :movie, Mime::SWF.all_types + Mime::VIDEO.all_types

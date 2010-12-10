@@ -3,7 +3,7 @@ Paperclipped
 
 ## IMPORTANT!
 
-This version of Paperclipped technically requires Radiant 0.8.0 or higher. Changes in the caching system and the updgrade to Rails 2.3.2 break the previous versions of the extension, but there are a few work arounds and it should work with 0.7.1. Just in case, the previous version is still around, on a branch marked Radiant-0.7.1. 
+This version of Paperclipped now requires Radiant 0.9.0 or higher. Just in case, the previous version is still around, on a branch marked Radiant-0.8 
 
 Let me know if this works and if you run into any issues. 
 
@@ -28,6 +28,10 @@ If you do install the Settings Extension you should be sure to add a config.exte
 Also the Settings Extension migration should be run before Paperclipped's migration.
 
 The configuration settings also enable a list of the allowed file types, maximum file size and should you need it, the path to your installation of Image Magick (this should not be needed, but I sometimes had a problem when using mod_rails).
+
+Paperclipped will integrate with the Styles'n'Scripts extension. For that to work, you'll need to load that extension before paperclipped:
+
+    config.extensions = [ :sns, :all ]
 
 ###Using Paperclipped
 
@@ -88,6 +92,10 @@ Also, for vertical centering of images, you have the handy `<r:assets:top_paddin
    
     
 ###Using Amazon s3
+First, be sure you have the aws\-s3 gem installed. 
+
+<pre><code>gem install aws-s3</code></pre>
+
 Everything works as before, but now if you want to add S3 support, you simply set the storage setting to "s3". 
 
 <pre><code>Radiant::Config[assets.storage] = "s3"</code></pre>
